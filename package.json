@@ -34,8 +34,8 @@
     "nsp": "^2.1.0"
   },
   "repository": {
-    "type": "",
-    "url": ""
+    "type": "git",
+    "url": "https://github.com/natesol-code21/adms-aggregator-api.git"
   },
   "license": "UNLICENSED",
   "description": "adms-aggregator-api"
