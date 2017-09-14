@@ -1,10 +1,13 @@
-test:
-        mocha
-test-jenkins:
-        mocha -R tap
-tdd:
-        watch -n 2 --color mocha -c
+REPORTER = dot
 
-.PHONY: test
-.PHONY: tdd
-.PHONY: test-jenkins
+test:
+  @NODE_ENV=test ./node_modules/.bin/mocha \
+    --reporter $(REPORTER) \
+
+test-w:
+  @NODE_ENV=test ./node_modules/.bin/mocha \
+    --reporter $(REPORTER) \
+    --growl \
+    --watch
+
+.PHONY: test test-w
