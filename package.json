@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node .",
-    "test": "IP=http://adms-aggregator-development.54.234.122.126.xip.io PORT=3000 mocha --timeout 50000 test/*.test.js"
+    "test": "mocha --timeout 50000 test/*.test.js"
   },
   "dependencies": {
     "chai": "^4.1.2",

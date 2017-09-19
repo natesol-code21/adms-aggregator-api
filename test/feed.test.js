@@ -1,10 +1,38 @@
 'use strict';
-
+var server = require('../server/server');
 var expect = require('chai').expect;
 var supertest = require('supertest');
-var api = supertest('/api');
+var api = supertest('http://adms-aggregator-development.54.234.122.126.xip.io/api');
+
+var Feed
+
+before(function() {
+    Feed = server.models.feed
+})
+
+beforeEach(function(){
+    console.log('beforeEach', this.currentTest.title);
+});
+afterEach(function(){
+    console.log('afterEach', this.currentTest.title, this.currentTest.state);
+});
+
+
+it('Post a new feed', function (done) {
+    api.post('/feeds').send({
+      name: 'cfr feed',
+      title: 'CFR',
+      description: 'This is cfr feed publication',
+      feed_url: 'http://cfr.feed.com'
+    }).expect(200, done)
+ })
 
 describe('Feed', function() {
+
+  it('Post a new feed', function (done) {
+      api.post('/feeds').send({name: 'test feed'}).expect(200, done)
+   })
+
   it('should get all feeds', function(done) {
     api.get('/feeds')
       .expect('Content-Type', /json/)
