@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  annotations:
+    pipeline.alpha.openshift.io/uses: '[{"name": "adms-aggregator", "namespace": "", "kind": "DeploymentConfig"}]'
+  creationTimestamp: '2017-09-14T14:47:34Z'
+  labels:
+    name: admsflow
+  name: admsflow
+  namespace: cicd
+  resourceVersion: '401284'
+  selfLink: /oapi/v1/namespaces/cicd/buildconfigs/admsflow
+  uid: a4dcb671-995b-11e7-b980-129db26e8e3c
+spec:
+  nodeSelector: {}
+  output: {}
+  postCommit:
+    script: npm test
+  resources: {}
+  runPolicy: Serial
+  source:
+    git:
+      uri: 'https://github.com/natesol-code21/adms-aggregator-api.git'
+    type: Git
+  strategy:
+    jenkinsPipelineStrategy:
+      jenkinsfile: >-
+        node{
+
+        tool name: 'nodejs', type: 'nodejs'
+
+        stage 'Build ADMS Development'
+
+        openshiftBuild(namespace: 'development', buildConfig: 'adms-aggregator',
+        showBuildLogs: 'true')
+
+        stage 'Deploy ADMS Development'
+
+        openshiftDeploy(namespace: 'development', deploymentConfig:
+        'adms-aggregator')
+
+        openshiftScale(namespace: 'development', deploymentConfig:
+        'adms-aggregator',replicaCount: '3')
+
+        stage 'Deploy ADMS Testing'
+
+        openshiftTag(namespace: 'development', sourceStream: 'adms-aggregator', 
+        sourceTag: 'latest', destinationStream: 'adms-aggregator',
+        destinationTag: 'readyToQA')
+
+        openshiftDeploy(namespace: 'testing', deploymentConfig:
+        'adms-aggregator', )
+
+        openshiftScale(namespace: 'testing', deploymentConfig:
+        'adms-aggregator',replicaCount: '3')
+
+        stage 'Integration Testing' 
+
+        }
+    type: JenkinsPipeline
+  triggers:
+    - github:
+        secret: ####
+      type: GitHub
+    - generic:
+        secret: ####
+      type: Generic
+
