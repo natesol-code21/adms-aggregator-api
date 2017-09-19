@@ -2,7 +2,7 @@
 
 var expect = require('chai').expect;
 var supertest = require('supertest');
-var api = supertest('http://0.0.0.0:3000/api');
+var api = supertest('/api');
 
 describe('Feed', function() {
   it('should get all feeds', function(done) {
