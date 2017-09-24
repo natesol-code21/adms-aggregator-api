@@ -2,7 +2,7 @@
 var server = require('../server/server');
 var expect = require('chai').expect;
 var supertest = require('supertest');
-var api = supertest('http://adms-aggregator-development.54.234.122.126.xip.io/api');
+var api = supertest('http://localhost:3000/api');
 
 var Feed
 
