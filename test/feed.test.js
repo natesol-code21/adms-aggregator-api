@@ -2,7 +2,7 @@
 var server = require('../server/server');
 var expect = require('chai').expect;
 var supertest = require('supertest');
-var api = supertest('../api');
+var api = supertest('https://adms-aggregate-api-adms.apps.adx.dicelab.net/api');
 
 var Feed
 
