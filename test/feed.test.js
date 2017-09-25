@@ -1,80 +1,18 @@
-'use strict';
+var chai = require('chai');
+var chaiHttp = require('chai-http');
 var server = require('../server/server');
-var expect = require('chai').expect;
-var supertest = require('supertest');
-var api = supertest('https://adms-aggregate-api-adms.apps.adx.dicelab.net/api');
+var should = chai.should();
 
-var Feed
-
-before(function() {
-    Feed = server.models.feed
-})
-
-beforeEach(function(){
-    console.log('beforeEach', this.currentTest.title);
-});
-afterEach(function(){
-    console.log('afterEach', this.currentTest.title, this.currentTest.state);
-});
+chai.use(chaiHttp);
 
 
-it('Post a new feed', function (done) {
-    api.post('/feeds').send({
-      name: 'cfr feed',
-      title: 'CFR',
-      description: 'This is cfr feed publication',
-      feed_url: 'http://cfr.feed.com'
-    }).expect(200, done)
- })
-
-describe('Feed', function() {
-
-  it('Post a new feed', function (done) {
-      api.post('/feeds').send({name: 'test feed'}).expect(200, done)
-   })
-
-  it('should get all feeds', function(done) {
-    api.get('/feeds')
-      .expect('Content-Type', /json/)
-      .expect(200)
-      .end(function(err, res) {
-        if (err) {
-          return done(err);
-        }
-        var feeds = res.body;
-
-        expect(feeds.length).to.be.above(0);
-        done();
-      });
-  });
-
-  it('should get a single feeds', function(done) {
-    api.get('/feeds/findOne')
-      .expect('Content-Type', /json/)
-      .expect(200)
-      .end(function(err, res) {
-        if (err) {
-          return done(err);
-        }
-        var feeds = res.body;
-        expect(Array.isArray(feeds)).to.be.false;
-        done();
-      });
-  });
-
-
-    it('should get total number of feeds', function(done) {
-      api.get('/feeds/count')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .end(function(err, res) {
-          if (err) {
-            return done(err);
-          }
-          var feeds = res.body;
-          expect(Array.isArray(feeds)).to.be.false;
-          done();
-        });
+describe('Feeds', function() {
+  it('should list ALL feeds on /api/feeds GET', function(done) {
+  chai.request(server)
+    .get('/api/feeds')
+    .end(function(err, res){
+      res.should.have.status(200);
+      done();
     });
-
+});
 });
